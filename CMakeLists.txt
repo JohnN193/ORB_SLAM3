@@ -33,7 +33,7 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
-find_package(OpenCV 3.4.1)
+find_package(OpenCV 4.5.1)
    if(NOT OpenCV_FOUND)
       message(FATAL_ERROR "OpenCV > 3.2 not found.")
    endif()
@@ -161,6 +161,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/initialAttempt)
 add_executable(mono_file
         initialAttempt/mono_fromFiles.cc)
 target_link_libraries(mono_file ${PROJECT_NAME})
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/initialAttempt)
+add_executable(mono_local
+        initialAttempt/mono_LocalWebcam.cc)
+target_link_libraries(mono_local ${PROJECT_NAME})
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/initialAttempt)
 # add_executable(no_imu_test
 #         initialAttempt/rgbd_noimu.cc)
@@ -187,6 +192,20 @@ if(EXISTS ${SRCDIR})
    target_link_libraries(rgbd_fromStream ${PROJECT_NAME} ${GRPC_LIBRARIES} ${GRPCPP_LIBRARIES} ${PROTOBUF_LIBRARIES})
    target_include_directories(rgbd_fromStream PUBLIC ${SRCDIR} ${GRPC_INCLUDE_DIRS} ${GRPCPP_INCLUDE_DIRS} ${PROTOBUF_INCLUDE_DIRS})
    target_compile_options(rgbd_fromStream PUBLIC ${GRPC_CFLAGS_OTHER} ${GRPCPP_CFLAGS_OTHER} ${PROTOBUF_CFLAGS_OTHER})
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/initialAttempt)
+   add_executable(mono_fromStream
+   initialAttempt/mono_fromStream.cc ${SOURCES})
+   target_link_libraries(mono_fromStream ${PROJECT_NAME} ${GRPC_LIBRARIES} ${GRPCPP_LIBRARIES} ${PROTOBUF_LIBRARIES})
+   target_include_directories(mono_fromStream PUBLIC ${SRCDIR} ${GRPC_INCLUDE_DIRS} ${GRPCPP_INCLUDE_DIRS} ${PROTOBUF_INCLUDE_DIRS})
+   target_compile_options(mono_fromStream PUBLIC ${GRPC_CFLAGS_OTHER} ${GRPCPP_CFLAGS_OTHER} ${PROTOBUF_CFLAGS_OTHER})
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/initialAttempt)
+   add_executable(mono_cleanishStream
+   initialAttempt/mono_fromStreamCleanish.cc ${SOURCES})
+   target_link_libraries(mono_cleanishStream ${PROJECT_NAME} ${GRPC_LIBRARIES} ${GRPCPP_LIBRARIES} ${PROTOBUF_LIBRARIES})
+   target_include_directories(mono_cleanishStream PUBLIC ${SRCDIR} ${GRPC_INCLUDE_DIRS} ${GRPCPP_INCLUDE_DIRS} ${PROTOBUF_INCLUDE_DIRS})
+   target_compile_options(mono_cleanishStream PUBLIC ${GRPC_CFLAGS_OTHER} ${GRPCPP_CFLAGS_OTHER} ${PROTOBUF_CFLAGS_OTHER})
    endif()
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
 
