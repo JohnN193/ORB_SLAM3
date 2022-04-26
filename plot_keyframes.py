@@ -9,7 +9,7 @@ import open3d as o3d
 # brew install python-tk in case you cannot plot because using agg
 
 # filename = 'KeyFrameTrajectory.txt' 
-file = 'outputPose'
+file = 'outputPoseMONO'
 filename = file + '.txt'
 pcdname = file + '.pcd'
 savefile = 'figs/' + file + '.png'
@@ -37,8 +37,8 @@ ax.set_xlabel("X")
 ax.set_ylabel("Y")
 ax.set_zlabel("Z")
 ax.set_box_aspect((np.ptp(x), np.ptp(y), np.ptp(z)))
-p.savefig(savefile)
-p.show()
+# p.savefig(savefile)
+# p.show()
 
 print("Load a ply point cloud, print it, and render it")
 # ply_point_cloud = o3d.data.PLYPointCloud()
@@ -61,3 +61,23 @@ o3d.visualization.draw_geometries([pcd, line_set],
                                   lookat=[2.6172, 2.0475, 1.532],
                                   up=[-0.0694, -0.9768, 0.2024])
 
+file2 = 'outputPose'
+filename2 = file2 + '.txt'
+savefile2 = 'figs/' + file2 + 'COMBO.png'
+x2, y2, z2 = [], [], []
+with open(filename2, newline='') as csvfile:
+    r = csv.reader(csvfile, delimiter=' ', quotechar='|')
+    xyzs = [row[1:4] for row in r]
+    for x_, y_, z_ in xyzs:
+        x2.append(float(x_))
+        y2.append(float(y_))
+        z2.append(float(z_))
+
+
+fig2 = p.figure()
+ax2 = p.axes(projection='3d')
+ax2.plot3D(x, y, z, 'red')
+ax2.plot3D(x2, y2, z2, 'blue')
+ax2.set_box_aspect((np.ptp(x2), np.ptp(y2), np.ptp(z2)))
+p.savefig(savefile2)
+p.show()
