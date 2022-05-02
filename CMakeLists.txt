@@ -35,7 +35,11 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
+<<<<<<< HEAD
 find_package(OpenCV 3.4)
+=======
+find_package(OpenCV 4.5.1)
+>>>>>>> ab7958f8fa11796917eb9db50476de37d5028bd5
    if(NOT OpenCV_FOUND)
       message(FATAL_ERROR "OpenCV > 3.2 not found.")
    endif()
@@ -172,12 +176,13 @@ target_link_libraries(mono_local ${PROJECT_NAME})
 # add_executable(no_imu_test
 #         initialAttempt/rgbd_noimu.cc)
 # target_link_libraries(no_imu_test ${PROJECT_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+add_executable(viam_main_v1
+        viam-main-dir/main_v1.cc)
+target_link_libraries(viam_main_v1 ${PROJECT_NAME})
 
-if(EXISTS ${SRCDIR})
-# set(ENV{PATH} "/usr/bin") 
-
-set(CMAKE_PREFIX_PATH "/home/linuxbrew/.linuxbrew/")
-
+if(FALSE)#if(EXISTS ${SRCDIR})
+   # set(CMAKE_PREFIX_PATH "/home/linuxbrew/.linuxbrew/")
    find_package(PkgConfig REQUIRED)
    set(ENV{PKG_CONFIG_PATH} "/home/linuxbrew/.linuxbrew/lib/pkgconfig") 
    # find_package(grpc)
