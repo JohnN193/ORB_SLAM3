@@ -146,8 +146,8 @@ cv::Mat im,depth, rawData;
       timeGRPC = std::chrono::steady_clock::now();
       grpcDuration = std::chrono::duration_cast<std::chrono::duration<double> >(timeGRPC - timeBegin).count();
       cout << "grpc time: " << grpcDuration << endl;
-      nSize = responseGet.frame().length();
-      std::vector<char> bytes(responseGet.frame().begin(), responseGet.frame().end());
+      nSize = responseGet.image().length();
+      std::vector<char> bytes(responseGet.image().begin(), responseGet.image().end());
       char *buffer = &bytes[0];
 
       int depthFrame[frameWidth][frameHeight];
@@ -161,7 +161,7 @@ cv::Mat im,depth, rawData;
         }
       }
 
-      n = responseGet.frame().find("\x89PNG\r\n\x1a\n",location);
+      n = responseGet.image().find("\x89PNG\r\n\x1a\n",location);
       // cout << n << endl;
       char* pngBuf = &bytes[n];
         // Seq loop

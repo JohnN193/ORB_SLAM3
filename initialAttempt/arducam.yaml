@@ -23,8 +23,8 @@ Camera1.p2: 0.19969297
 # Camera resolution
 # Camera.width: 1024
 # Camera.height: 768
-Camera.width: 800
-Camera.height: 600
+Camera.width: 640
+Camera.height: 480
 # Camera frames per second 
 Camera.fps: 10
 

@@ -179,7 +179,7 @@ int main(int argc, char **argv)
 	for (auto p : mapStuff) {
 		Eigen::Matrix<float, 3, 1> v = p->GetWorldPos();//ORB_SLAM3::Converter::toVector3d(p->GetWorldPos());
 		// std::cout << v.x() << "," << v.y() << "," << v.z() << std::endl;
-        ofs << v.x()  << " " << v.y()  << " " << v.z()  << "\n";
+        ofs << v.x()  << " " << v.z()  << " " << v.y()  << "\n";
 	}
     ofs.close();
     cout << "End to write PCD" << endl;

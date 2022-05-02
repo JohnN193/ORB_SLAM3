@@ -9,7 +9,7 @@ import open3d as o3d
 # brew install python-tk in case you cannot plot because using agg
 
 # filename = 'KeyFrameTrajectory.txt' 
-file = 'outputPose'
+file = 'outputPose4'
 filename = file + '.txt'
 pcdname = file + '.pcd'
 savefile = 'figs/' + file + '.png'
@@ -45,12 +45,12 @@ print("Load a ply point cloud, print it, and render it")
 pcd = o3d.io.read_point_cloud(pcdname)
 print(pcd)
 print(np.asarray(pcd.points))
-
+pcd.colors = o3d.utility.Vector3dVector(np_colors)
 
 line_set = o3d.geometry.LineSet()
 colors = [[1, 0, 0] for i in range(len(x))]
 
-points = [x,y,z]
+points = [x,z,y]
 lines = [list(range(0, len(x)-1)),list(range(1, len(x)))]
 line_set.lines = o3d.utility.Vector2iVector(np.transpose(lines))
 line_set.points = o3d.utility.Vector3dVector(np.transpose(points))
@@ -61,3 +61,7 @@ o3d.visualization.draw_geometries([pcd, line_set],
                                   lookat=[2.6172, 2.0475, 1.532],
                                   up=[-0.0694, -0.9768, 0.2024])
 
+
+voxel_grid = o3d.geometry.VoxelGrid.create_from_point_cloud(pcd,
+                                                            voxel_size=0.5)
+o3d.visualization.draw_geometries([voxel_grid])

@@ -151,14 +151,15 @@ int main(int argc, char **argv) {
             
             std::cout << "  " << index << " : " << sensor.get_info(RS2_CAMERA_INFO_NAME) << std::endl;
             // get_sensor_option(sensor);
-            // if (index == 1) {
+            if (index == 1) {
+            // sensor.set_option(RS2_OPTION_ENABLE_MAX_USABLE_RANGE, 1);
             //     sensor.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 1);
             //     sensor.set_option(RS2_OPTION_AUTO_EXPOSURE_LIMIT,50000);
             //     sensor.set_option(RS2_OPTION_EMITTER_ENABLED, 1); // emitter on for depth information
-            // }
+            }
             if (index == 2){
                 // RGB camera
-                sensor.set_option(RS2_OPTION_EXPOSURE,80.f);
+                // sensor.set_option(RS2_OPTION_EXPOSURE,80.f);
                 
             }
 
@@ -308,7 +309,7 @@ int main(int argc, char **argv) {
 
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::RGBD, false, 0, file_name);
+    ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::RGBD, true, 0, file_name);
     float imageScale = SLAM.GetImageScale();
     
     double timestamp,timeloop;

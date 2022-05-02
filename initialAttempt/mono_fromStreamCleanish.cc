@@ -84,8 +84,9 @@ class CameraClient {
     //   int frameHeight = (int) responseGet.height_px();
     //   cout << "width: "<< frameWidth << " height: " << frameHeight << endl;
 
-      int nSize = responseGet.frame().length();
-      std::vector<char> bytes(responseGet.frame().begin(), responseGet.frame().end());
+      int nSize = responseGet.image().length();
+      cout << nSize << endl;
+      std::vector<char> bytes(responseGet.image().begin(), responseGet.image().end());
       char *buffer = &bytes[0];
       rawData =  cv::Mat(cv::Size(1,nSize), CV_8UC1, (void*)buffer, cv::IMREAD_COLOR);
       return cv::imdecode(rawData,cv::IMREAD_COLOR);
@@ -108,7 +109,6 @@ int main(int argc, char **argv)
              << endl;
         return 1;
     }
-
     string file_name,file_nameTraj,file_nameKey;
     bool bFileName = false;
 
@@ -161,7 +161,7 @@ cv::Mat im,depth, rawData;
     CameraClient camera(grpc::CreateCustomChannel(argv[1], grpc::InsecureChannelCredentials(),ch_args));
     // requestGet.set_name("r-vg2105m05.color");
     //   requestGet.set_name("color");
-    std::string cameraName = "color";
+    std::string cameraName = "combined";
     while (!SLAM.isShutDown() && b_continue_session)
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(3));
