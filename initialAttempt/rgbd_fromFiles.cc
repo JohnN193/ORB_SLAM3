@@ -97,7 +97,7 @@ int main(int argc, char **argv)
     cv::Mat imRGB, imD;
     Sophus::SE3f pose;
      std::chrono::steady_clock::time_point timeStart = std::chrono::steady_clock::now();
-      
+    double tStart = vTimestamps[0];
     for(int ni=0; ni<nImages; ni++)
     {
         // Read image and depthmap from file
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
                  << vstrImageFilenamesRGB[ni] << endl;
             return 1;
         }
-
+        cout << "yo" << endl;
         if(imageScale != 1.f)
         {
             int width = imRGB.cols * imageScale;

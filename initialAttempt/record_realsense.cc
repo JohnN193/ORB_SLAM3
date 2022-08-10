@@ -412,17 +412,15 @@ std::cout << "wait for a minute" << std::endl;
         char timestampVIAM[100];
             // std::strftime(timestampVIAM, sizeof(timestampVIAM), "%FT%H_%M_%S", std::gmtime(&t));
         
-        // std::string timeString = to_string(timestampMillis);
-        // timeString.erase(6,2);
-        // timeString.erase(0,1);
-        // std::replace(timeString.begin(), timeString.end(), ':', '_');
-        long long millisecondTime  = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-            // double sec_since_epoch = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-            // int currMillis = millisecondTime - sec_since_epoch*1000;
-            // std::replace(timeString.begin(), timeString.end(), ':', '_');
-		std::string millisString = std::to_string(millisecondTime);
-        filenameRGB += millisString + ".png";
-        filenameDEPTH += millisString + ".png"; 
+         timeNow = std::chrono::steady_clock::now();
+        timestamp = std::chrono::duration_cast<std::chrono::duration<double> >(timeNow - timeStart).count();
+        std::string timeString = to_string(timestamp);
+        std::replace(timeString.begin(), timeString.end(), ':', '_');
+
+        // filenameRGB += millisString + ".png";
+        // filenameDEPTH += millisString + ".png"; 
+        filenameRGB += timeString + ".png";
+        filenameDEPTH += timeString + ".png"; 
         // filenameRGB += "color_data_" + string(timestampVIAM) + timeString + ".png";
         // filenameDEPTH += "color_data_"+ string(timestampVIAM) + timeString + ".png"; 
         cv::imwrite(filenameRGB,im);
