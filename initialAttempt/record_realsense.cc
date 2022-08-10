@@ -24,7 +24,6 @@
 #include <chrono>
 #include <ctime>
 #include <sstream>
-#include <sys/time.h>
 
 #include <condition_variable>
 
@@ -108,7 +107,7 @@ int main(int argc, char **argv) {
     // }
     string data_path = string(argv[1]);
     string vocab = data_path + "/config/ORBvoc.txt";
-    string settings = data_path + "/config/color_data_2022-08-04T18_54_55.1147.yaml";
+    string settings = data_path + "/config/color_data_2022-08-04T18_54_55.1147.yaml ";
 
     string file_name,file_nameTraj,file_nameKey;
     bool bFileName = false;
@@ -317,8 +316,8 @@ int main(int argc, char **argv) {
 std::cout << "wait for a minute" << std::endl;
 	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM3::System SLAM(vocab,settings,ORB_SLAM3::System::RGBD, false, 0, file_name);
-    float imageScale = SLAM.GetImageScale();
+    // ORB_SLAM3::System SLAM(vocab,settings,ORB_SLAM3::System::RGBD, false, 0, file_name);
+    // float imageScale = SLAM.GetImageScale();
     
     double timestamp;
     cv::Mat im, depth;
@@ -329,7 +328,7 @@ std::cout << "wait for a minute" << std::endl;
     std::chrono::steady_clock::time_point timeStart = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point timeNow = std::chrono::steady_clock::now();
 
-    while (!SLAM.isShutDown() && b_continue_session)
+    while (b_continue_session)
     {
         {
             std::unique_lock<std::mutex> lk(imu_mutex);
@@ -406,31 +405,26 @@ std::cout << "wait for a minute" << std::endl;
         std::string filenameRGB = data_path + "/data/rgb/";
         std::string filenameDEPTH = data_path + "/data/depth/";
         
+        // timeNow = std::chrono::steady_clock::now();
+        // timestamp = std::chrono::duration_cast<std::chrono::duration<double> >(timeNow - timeStart).count();
+        // double timestampMillis = fmod(timestamp,1);
+        std::time_t t = std::time(nullptr);
         char timestampVIAM[100];
-        //     std::strftime(timestampVIAM, sizeof(timestampVIAM), "%FT%H_%M_%S", std::gmtime(&t));
+            // std::strftime(timestampVIAM, sizeof(timestampVIAM), "%FT%H_%M_%S", std::gmtime(&t));
         
-        // double millisecondTime  = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        // double sec_since_epoch = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        // int currMillis = millisecondTime - sec_since_epoch*1000;
-        struct tm* tm_info;
-        struct timeval tv;
-            gettimeofday(&tv, NULL);
-
-            int millisec = lrint(tv.tv_usec/1000.0); // Round to nearest millisec
-            if (millisec>=1000) { // Allow for rounding up to nearest second
-                millisec -=1000;
-                tv.tv_sec++;
-            }
-
-            tm_info = localtime(&tv.tv_sec);
-
-            strftime(timestampVIAM, sizeof(timestampVIAM), "%FT%H_%M_%S", tm_info);
-            printf("%s.%03d\n", timestampVIAM, millisec);
-
-		std::string millisString = std::to_string(millisec);
-
-        filenameRGB += "color_data_" + string(timestampVIAM) + "." + millisString + ".png";
-        filenameDEPTH += "color_data_"+ string(timestampVIAM) + "." + millisString + ".png"; 
+        // std::string timeString = to_string(timestampMillis);
+        // timeString.erase(6,2);
+        // timeString.erase(0,1);
+        // std::replace(timeString.begin(), timeString.end(), ':', '_');
+        long long millisecondTime  = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+            // double sec_since_epoch = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+            // int currMillis = millisecondTime - sec_since_epoch*1000;
+            // std::replace(timeString.begin(), timeString.end(), ':', '_');
+		std::string millisString = std::to_string(millisecondTime);
+        filenameRGB += millisString + ".png";
+        filenameDEPTH += millisString + ".png"; 
+        // filenameRGB += "color_data_" + string(timestampVIAM) + timeString + ".png";
+        // filenameDEPTH += "color_data_"+ string(timestampVIAM) + timeString + ".png"; 
         cv::imwrite(filenameRGB,im);
         cv::imwrite(filenameDEPTH,depth);
         // return 0;
@@ -447,11 +441,11 @@ std::cout << "wait for a minute" << std::endl;
 
     }
     cout << "System shutdown!\n";
-    if(!b_continue_session){
-        SLAM.Shutdown();
-        // SLAM.SaveTrajectoryEuRoC(file_nameTraj);
-        // SLAM.SaveKeyFrameTrajectoryEuRoC(file_nameKey);
-    }
+    // if(!b_continue_session){
+    //     SLAM.Shutdown();
+    //     // SLAM.SaveTrajectoryEuRoC(file_nameTraj);
+    //     // SLAM.SaveKeyFrameTrajectoryEuRoC(file_nameKey);
+    // }
     cout << "Yo Shutting" << endl;
     cout << "use 'ls -tr | tee -a ../Out_file.txt' in the rgb folder to make the timestamps file" << endl;
     return 0;

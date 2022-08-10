@@ -30,7 +30,9 @@ using namespace boost::filesystem;
 // void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageFilenamesRGB,
 //                 vector<string> &vstrImageFilenamesD, vector<double> &vTimestamps);
 double readTimeFromFilename(string filename);
-void LoadImages(const string &path_to_data,
+void LoadImagesNew(const string &path_to_data,
+                vector<string> &vstrImageFilenamesRGB, vector<string> &vstrImageFilenamesD, vector<double> &vTimeStamps);
+                void LoadImages(const string &strPathRGB, const string &strPathD, const string &strPathTimes,
                 vector<string> &vstrImageFilenamesRGB, vector<string> &vstrImageFilenamesD, vector<double> &vTimeStamps);
 std::vector<std::string> listFilesInDirectoryForCamera(
     std::string data_directory, std::string extension,
@@ -64,7 +66,8 @@ int main(int argc, char **argv)
  	
 	string pathCam0 = pathSeq + "/rgb";
 	string pathCam1 = pathSeq + "/depth";
-    LoadImages(pathSeq, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
+    LoadImages(pathCam0, pathCam1, strAssociationFilename, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
+    // LoadImagesNew(pathSeq, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
     // Check consistency in the number of images and depthmaps
     int nImages = vstrImageFilenamesRGB.size();
     if(vstrImageFilenamesRGB.empty())
@@ -237,7 +240,7 @@ int main(int argc, char **argv)
 //         }
 //     }
 // }
-void LoadImages(const string &path_to_data,
+void LoadImagesNew(const string &path_to_data,
                 vector<string> &vstrImageFilenamesRGB, vector<string> &vstrImageFilenamesD, vector<double> &vTimeStamps)
 {
     vTimeStamps.reserve(5000);
@@ -257,6 +260,36 @@ void LoadImages(const string &path_to_data,
         vstrImageFilenamesRGB.push_back(colorName);
         vstrImageFilenamesD.push_back(depthName);
         vTimeStamps.push_back(timeStamp);
+    }
+}
+
+void LoadImages(const string &strPathRGB, const string &strPathD, const string &strPathTimes,
+                vector<string> &vstrImageFilenamesRGB, vector<string> &vstrImageFilenamesD, vector<double> &vTimeStamps)
+{
+    std::ifstream fTimes;
+    fTimes.open(strPathTimes.c_str());
+    vTimeStamps.reserve(5000);
+    vstrImageFilenamesRGB.reserve(5000);
+    vstrImageFilenamesD.reserve(5000);
+    while(!fTimes.eof())
+    {
+        string s;
+        getline(fTimes,s);
+        if(!s.empty())
+        {
+            stringstream ss;
+            ss << s;
+            vstrImageFilenamesRGB.push_back(strPathRGB + "/" + ss.str());
+            vstrImageFilenamesD.push_back(strPathD + "/" + ss.str());
+            double t;
+            string timestring = s.substr(0, s.find_last_of("."));
+	    std::string::size_type sz;  
+	    // cout << timestring << endl;
+        //     timestring >> t;
+	    t = std::stod(timestring,&sz);
+            vTimeStamps.push_back(t);
+
+        }
     }
 }
 
