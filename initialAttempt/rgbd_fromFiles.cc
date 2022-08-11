@@ -42,8 +42,8 @@ int main(int argc, char **argv)
     
     if(argc < 5)
     {
-        cerr << endl << "Usage: ./rgbd_file path_to_vocabulary path_to_settings path_to_sequence_folder_1 path_to_times_file_1 (trajectory_file_name)" << endl;
-	 cerr << endl << "Example: ./initialAttempt/rgbd_file ./Vocabulary/ORBvoc.txt ./initialAttempt/realsense515_depth.yaml ./officePics Out_file.txt outputPose" << endl;
+        cerr << endl << "Usage: ./rgbd_file data_dir trajectory_file_name" << endl;
+	 cerr << endl << "Example: ./initialAttempt/rgbd_file ./OfficePics3 outputPose" << endl;
         return 1;
     }
     string file_name,file_nameTraj,file_nameKey;
@@ -55,17 +55,41 @@ int main(int argc, char **argv)
         file_nameTraj = file_nameTraj.append(".txt");
         file_nameKey = file_nameKey.append("Keyframe.txt");
 
+    string actual_path = argv[1];
+    string path_to_settings = actual_path + "/config";
+    string path_to_data = actual_path + "/data";
+    string path_to_vocab = actual_path + "/config/ORBvoc.txt";
 
+    const path myPath(path_to_settings);
+    path latest;
+    std::time_t latest_tm = 0;
+    for (auto &&entry :
+         boost::make_iterator_range(directory_iterator(myPath), {})) {
+        path p = entry.path();
+
+        if (is_regular_file(p) && p.extension() == ".yaml") {
+            std::time_t timestamp = last_write_time(p);
+            if (timestamp > latest_tm) {
+                latest = p;
+                latest_tm = timestamp;
+            }
+        }
+    }
+    if (latest.empty()) {
+        cout << "No .yaml file found" << endl;
+        return 1;
+    }
+    string full_path_to_settings =
+        path_to_settings + "/" + latest.filename().string();
     // Retrieve paths to images
     vector<string> vstrImageFilenamesRGB;
     vector<string> vstrImageFilenamesD;
     vector<double> vTimestamps;
-    string strAssociationFilename = string(argv[3]) + "/" + string(argv[4]);
-     string pathSeq(argv[3]);
+    string strAssociationFilename = path_to_data + "/Out_file.txt";
 //     LoadImages(strAssociationFilename, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
  	
-	string pathCam0 = pathSeq + "/rgb";
-	string pathCam1 = pathSeq + "/depth";
+	string pathCam0 = path_to_data + "/rgb";
+	string pathCam1 = path_to_data + "/depth";
     LoadImages(pathCam0, pathCam1, strAssociationFilename, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
     // LoadImagesNew(pathSeq, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
     // Check consistency in the number of images and depthmaps
@@ -82,7 +106,7 @@ int main(int argc, char **argv)
     }
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::RGBD,true, 0, file_nameTraj);
+    ORB_SLAM3::System SLAM(path_to_vocab,full_path_to_settings,ORB_SLAM3::System::RGBD,true, 0, file_nameTraj);
     float imageScale = SLAM.GetImageScale();
 
     // Vector for tracking time statistics

@@ -313,8 +313,8 @@ int main(int argc, char **argv) {
     rs2_extrinsics e = depth_stream.get_extrinsics_to(cam_stream);
     std::cout << "Baseline = "<< e.translation[0] << std::endl;
 
-std::cout << "wait for a minute" << std::endl;
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+// std::cout << "wait for a minute" << std::endl;
+// 	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     // ORB_SLAM3::System SLAM(vocab,settings,ORB_SLAM3::System::RGBD, false, 0, file_name);
     // float imageScale = SLAM.GetImageScale();
@@ -343,8 +343,8 @@ std::cout << "wait for a minute" << std::endl;
 
             fs = fsSLAM;
 
-            if(count_im_buffer>1)
-                cout << count_im_buffer -1 << " dropped frs\n";
+            // if(count_im_buffer>1)
+            //     cout << count_im_buffer -1 << " dropped frs\n";
             count_im_buffer = 0;
             timestamp = timestamp_image;
             im = imCV.clone();
