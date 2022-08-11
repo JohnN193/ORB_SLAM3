@@ -40,7 +40,7 @@ std::vector<std::string> listFilesInDirectoryForCamera(
 int main(int argc, char **argv)
 {
     
-    if(argc < 5)
+    if(argc < 2)
     {
         cerr << endl << "Usage: ./rgbd_file data_dir trajectory_file_name" << endl;
 	 cerr << endl << "Example: ./initialAttempt/rgbd_file ./OfficePics3 outputPose" << endl;
