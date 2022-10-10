@@ -533,19 +533,19 @@ void System::Shutdown()
     }*/
 
     // Wait until all thread have effectively stopped
-    /*while(!mpLocalMapper->isFinished() || !mpLoopCloser->isFinished() || mpLoopCloser->isRunningGBA())
+    while(!mpLocalMapper->isFinished() || !mpLoopCloser->isFinished() || mpLoopCloser->isRunningGBA())
     {
         if(!mpLocalMapper->isFinished())
-            cout << "mpLocalMapper is not finished" << endl;*/
-        /*if(!mpLoopCloser->isFinished())
+            cout << "mpLocalMapper is not finished" << endl;
+        if(!mpLoopCloser->isFinished())
             cout << "mpLoopCloser is not finished" << endl;
         if(mpLoopCloser->isRunningGBA()){
             cout << "mpLoopCloser is running GBA" << endl;
             cout << "break anyway..." << endl;
             break;
-        }*/
-        /*usleep(5000);
-    }*/
+        }
+        usleep(5000);
+    }
 
     if(!mStrSaveAtlasToFile.empty())
     {
@@ -1408,6 +1408,10 @@ void System::SaveAtlasAsOsaWithTimestamp(string pathSaveFileName) {
     std::size_t found = mStrVocabularyFilePath.find_last_of("/\\");
     string strVocabularyName = mStrVocabularyFilePath.substr(found+1);
     mpAtlas->SaveAtlas(pathSaveFileName, strVocabularyName, strVocabularyChecksum);
+}
+
+void System::RenameShutdownSaveAtlas(string pathSaveFileName){
+    mStrSaveAtlasToFile = pathSaveFileName;
 }
 
 void System::SaveAtlas(int type){

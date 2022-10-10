@@ -190,6 +190,7 @@ public:
     Atlas* GetAtlas() { return mpAtlas; };
     string GetAtlasName(){ return mStrLoadAtlasFromFile;};
     void SaveAtlasAsOsaWithTimestamp(string pathSaveFileName);
+    void RenameShutdownSaveAtlas(string pathSaveFileName);
     
     
 #ifdef REGISTER_TIMES
