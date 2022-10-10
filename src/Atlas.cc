@@ -315,12 +315,16 @@ void Atlas::PreSave()
             return elem1->GetId() < elem2->GetId();
         }
     };
-    std::copy(mspMaps.begin(), mspMaps.end(), std::back_inserter(mvpBackupMaps));
-    sort(mvpBackupMaps.begin(), mvpBackupMaps.end(), compFunctor());
+    {
+        lock_guard<mutex> lockCurr(mpCurrentMap->mMutexMapUpdate);
+        std::copy(mspMaps.begin(), mspMaps.end(), std::back_inserter(mvpBackupMaps));
+        sort(mvpBackupMaps.begin(), mvpBackupMaps.end(), compFunctor());
+    }
 
     std::set<GeometricCamera*> spCams(mvpCameras.begin(), mvpCameras.end());
     for(Map* pMi : mvpBackupMaps)
     {
+        lock_guard<mutex> lock(pMi->mMutexMapUpdate);
         if(!pMi || pMi->IsBad())
             continue;
 
@@ -356,40 +360,9 @@ void Atlas::PostLoad()
 
 void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string strVocabularyChecksum) {
     lock_guard<mutex> lock(mMutexAtlas);
-        
-    pathSaveFileName = pathSaveFileName.append(".osa");
-    if(mpCurrentMap){
-        if(!mspMaps.empty() && mnLastInitKFidMap < mpCurrentMap->GetMaxKFid())
-            mnLastInitKFidMap = mpCurrentMap->GetMaxKFid()+1; //The init KF is the next of current maximum
-    }
-    struct compFunctor
-    {
-        inline bool operator()(Map* elem1 ,Map* elem2)
-        {
-            return elem1->GetId() < elem2->GetId();
-        }
-    };
-    {
-        lock_guard<mutex> lockCurr(mpCurrentMap->mMutexMapUpdate);
-        std::copy(mspMaps.begin(), mspMaps.end(), std::back_inserter(mvpBackupMaps));
-        sort(mvpBackupMaps.begin(), mvpBackupMaps.end(), compFunctor());
-    }
+    this->PreSave();
     
-    std::set<GeometricCamera*> spCams(mvpCameras.begin(), mvpCameras.end());
-    for(Map* pMi : mvpBackupMaps)
-    {
-        lock_guard<mutex> lock2(pMi->mMutexMapUpdate);
-        if(!pMi || pMi->IsBad())
-            continue;
-
-        if(pMi->GetAllKeyFrames().size() == 0) {
-            // Empty map, erase before of save it.
-            SetMapBad(pMi);
-            continue;
-        }
-        pMi->PreSave(spCams);
-    }
-    RemoveBadMaps();
+    pathSaveFileName = pathSaveFileName.append(".osa");
 
     cout << pathSaveFileName << endl;
     std::ofstream ofs(pathSaveFileName, std::ios::binary);
