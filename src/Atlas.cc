@@ -315,7 +315,6 @@ void Atlas::PreSave()
             return elem1->GetId() < elem2->GetId();
         }
     };
-    
     std::copy(mspMaps.begin(), mspMaps.end(), std::back_inserter(mvpBackupMaps));
     sort(mvpBackupMaps.begin(), mvpBackupMaps.end(), compFunctor());
 
@@ -359,7 +358,6 @@ void Atlas::PostLoad()
 void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string strVocabularyChecksum) {
     lock_guard<mutex> lock(mMutexAtlas);
     this->PreSave();
-
     cout << pathSaveFileName << endl;
     std::ofstream ofs(pathSaveFileName, std::ios::binary);
     boost::archive::binary_oarchive oa(ofs);
