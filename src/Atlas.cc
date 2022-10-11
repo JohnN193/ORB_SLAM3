@@ -315,11 +315,9 @@ void Atlas::PreSave()
             return elem1->GetId() < elem2->GetId();
         }
     };
-    {
-        lock_guard<mutex> lockCurr(mpCurrentMap->mMutexMapUpdate);
-        std::copy(mspMaps.begin(), mspMaps.end(), std::back_inserter(mvpBackupMaps));
-        sort(mvpBackupMaps.begin(), mvpBackupMaps.end(), compFunctor());
-    }
+    
+    std::copy(mspMaps.begin(), mspMaps.end(), std::back_inserter(mvpBackupMaps));
+    sort(mvpBackupMaps.begin(), mvpBackupMaps.end(), compFunctor());
 
     std::set<GeometricCamera*> spCams(mvpCameras.begin(), mvpCameras.end());
     for(Map* pMi : mvpBackupMaps)
@@ -361,8 +359,6 @@ void Atlas::PostLoad()
 void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string strVocabularyChecksum) {
     lock_guard<mutex> lock(mMutexAtlas);
     this->PreSave();
-    
-    pathSaveFileName = pathSaveFileName.append(".osa");
 
     cout << pathSaveFileName << endl;
     std::ofstream ofs(pathSaveFileName, std::ios::binary);
