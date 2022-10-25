@@ -44,6 +44,7 @@ MESSAGE(${OpenCV_VERSION})
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
 find_package(Boost REQUIRED COMPONENTS serialization filesystem)
+find_package(OpenSSL REQUIRED)
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
@@ -124,7 +125,7 @@ ${Pangolin_LIBRARIES}
 ${Boost_LIBRARIES}
 ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2${CMAKE_SHARED_LIBRARY_SUFFIX}
 ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o${CMAKE_SHARED_LIBRARY_SUFFIX}
--lcrypto
+OpenSSL::SSL
 )
 
 
