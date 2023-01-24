@@ -15,7 +15,7 @@ Examples/RGB-D/rgbd_realsense_D435i
 
 Examples/RGB-D-Inertial/rgbd_inertial_realsense_D435i
 
-Examples/Monocular/mono_realsense_D435i
+Examples/Monocular/mono_realsense_D435ia
 Examples/Monocular/mono_euroc
 Examples/Monocular/mono_kitti
 Examples/Monocular/mono_tum
