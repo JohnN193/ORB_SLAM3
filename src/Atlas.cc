@@ -368,6 +368,17 @@ void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string 
     oa << this;
 }
 
+void Atlas::Archive(std::stringbuf &buffer, string strVocabularyName, string strVocabularyChecksum) {
+    lock_guard<mutex> lock(mMutexAtlas);
+    this->PreSave();
+    boost::archive::binary_oarchive oa(buffer);
+    oa << strVocabularyName;
+    oa << strVocabularyChecksum;
+    // TODO: Verify that writing out `this` behaves as expected by loading
+    // a saved map.
+    oa << this;
+}
+
 void Atlas::SetKeyFrameDababase(KeyFrameDatabase* pKFDB)
 {
     mpKeyFrameDB = pKFDB;
