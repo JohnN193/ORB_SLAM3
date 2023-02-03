@@ -374,8 +374,6 @@ void Atlas::Archive(std::stringbuf &buffer, string strVocabularyName, string str
     boost::archive::binary_oarchive oa(buffer);
     oa << strVocabularyName;
     oa << strVocabularyChecksum;
-    // TODO: Verify that writing out `this` behaves as expected by loading
-    // a saved map.
     oa << this;
 }
 
