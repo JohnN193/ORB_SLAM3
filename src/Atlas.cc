@@ -368,6 +368,15 @@ void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string 
     oa << this;
 }
 
+void Atlas::Archive(std::stringbuf &buffer, string strVocabularyName, string strVocabularyChecksum) {
+    lock_guard<mutex> lock(mMutexAtlas);
+    this->PreSave();
+    boost::archive::binary_oarchive oa(buffer);
+    oa << strVocabularyName;
+    oa << strVocabularyChecksum;
+    oa << this;
+}
+
 void Atlas::SetKeyFrameDababase(KeyFrameDatabase* pKFDB)
 {
     mpKeyFrameDB = pKFDB;

@@ -190,6 +190,7 @@ public:
     Atlas* GetAtlas() { return mpAtlas; };
     string GetAtlasName(){ return mStrLoadAtlasFromFile;};
     void SaveAtlasAsOsaWithTimestamp(string pathSaveFileName);
+    void DumpOsa(std::stringbuf &buffer);
     
     
 #ifdef REGISTER_TIMES

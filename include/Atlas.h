@@ -127,6 +127,7 @@ public:
     void PreSave();
     void PostLoad();
     void SaveAtlas(string pathSaveFileName, string strVocabularyName, string strVocabularyChecksum);
+    void Archive(std::stringbuf &buffer, string strVocabularyName, string strVocabularyChecksum);
 
     map<long unsigned int, KeyFrame*> GetAtlasKeyframes();
 
