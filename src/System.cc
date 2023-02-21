@@ -1423,8 +1423,8 @@ void System::SaveAtlas(int type){
         //clock_t start = clock();
         {
             // PreSave assumes that the current map is locked
-            Map* currentMap = mpAtlas.GetCurrentMap();
-            std::lock_guard<std::mutex> lock(currentMap -> mMutexMapUpdate ); 
+            Map* currentMap = mpAtlas->GetCurrentMap();
+            std::lock_guard<std::mutex> lock(currentMap->mMutexMapUpdate ); 
             // Save the current session
             mpAtlas->PreSave();
         }
