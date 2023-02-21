@@ -301,6 +301,7 @@ bool Atlas::isImuInitialized()
     return mpCurrentMap->isImuInitialized();
 }
 
+// Assumptions: mpCurrentMap->mMutexMapUpdate and mMutexAtlas are locked
 void Atlas::PreSave()
 {
     if(mpCurrentMap){
@@ -321,7 +322,9 @@ void Atlas::PreSave()
     std::set<GeometricCamera*> spCams(mvpCameras.begin(), mvpCameras.end());
     for(Map* pMi : mvpBackupMaps)
     {
-        lock_guard<mutex> lock(pMi->mMutexMapUpdate);
+        // Lock everything that isn't the current map because that is already locked by the caller
+        mutex unusedMutex;
+        lock_guard<mutex> lock(pMi == mpCurrentMap ? unusedMutex : pMi->mMutexMapUpdate);
         if(!pMi || pMi->IsBad())
             continue;
 
@@ -356,6 +359,10 @@ void Atlas::PostLoad()
 }
 
 void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string strVocabularyChecksum) {
+    // Get the lock for the current map before mMutexAtlas to 
+    // preserve global ordering (Tracking::Track grabs 
+    // mMutexMapUpdate on the current map and then mMutexAtlas)
+    lock_guard<mutex> currentMapLock(mpCurrentMap -> mMutexMapUpdate);
     lock_guard<mutex> lock(mMutexAtlas);
     this->PreSave();
     cout << pathSaveFileName << endl;
@@ -369,6 +376,10 @@ void Atlas::SaveAtlas(string pathSaveFileName, string strVocabularyName, string 
 }
 
 void Atlas::Archive(std::stringbuf &buffer, string strVocabularyName, string strVocabularyChecksum) {
+    // Get the lock for the current map before mMutexAtlas to 
+    // preserve global ordering (Tracking::Track grabs 
+    // mMutexMapUpdate on the current map and then mMutexAtlas)
+    lock_guard<mutex> currentMapLock(mpCurrentMap -> mMutexMapUpdate);
     lock_guard<mutex> lock(mMutexAtlas);
     this->PreSave();
     boost::archive::binary_oarchive oa(buffer);

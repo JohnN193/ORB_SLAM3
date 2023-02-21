@@ -1421,10 +1421,13 @@ void System::SaveAtlas(int type){
     if(!mStrSaveAtlasToFile.empty())
     {
         //clock_t start = clock();
-
-        // Save the current session
-        mpAtlas->PreSave();
-        
+        {
+            // PreSave assumes that the current map is locked
+            Map* currentMap = mpAtlas.GetCurrentMap();
+            std::lock_guard<std::mutex> lock(currentMap -> mMutexMapUpdate ); 
+            // Save the current session
+            mpAtlas->PreSave();
+        }
         string pathSaveFileName = mStrSaveAtlasToFile;
         // pathSaveFileName = pathSaveFileName.append(mStrSaveAtlasToFile);
         if(type == TEXT_FILE)
