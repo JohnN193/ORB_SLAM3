@@ -2,8 +2,6 @@
 
 ⚠️ If you are a Viam customer, **please check out the module repository: [viam-orb-slam3](https://github.com/viamrobotics/viam-orb-slam3)**. This is our internal fork of ORB_SLAM3. 
 
-**We do not reccomend that you use this repo.** 
-
 ## Linux RTK Notes
 When downloading on a Linux computer with rtk(not a pi) you may have to remove brew from your PATH to get some dependencies to work. In addition you may have to remove ncurses and libtiff from brew. Also you may need to change which version of some packages(like openCV) is being used in CMakeLists.txt. We are working on improving this process.
 
