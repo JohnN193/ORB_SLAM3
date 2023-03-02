@@ -1,5 +1,9 @@
 # VIAM NOTES
-when downloading on a linux computer with rtk(not a pi) I had to remove brew from my PATH to get some dependencies to work. In addition I had to remove ncurses and libtiff from brew. added them back afterwards but there is 100% a more correct way to do this. Also need to change which version of some packages(like openCV) is being used in CMakeLists.txt
+
+⚠️ If you are a Viam customer, **please check out the module repository: [viam-orb-slam3](https://github.com/viamrobotics/viam-orb-slam3)**. This is our internal fork of ORB_SLAM3. 
+
+## Linux RTK Notes
+When downloading on a Linux computer with rtk(not a pi) you may have to remove brew from your PATH to get some dependencies to work. In addition you may have to remove ncurses and libtiff from brew. Also you may need to change which version of some packages(like openCV) is being used in CMakeLists.txt. We are working on improving this process.
 
 ## setup Pangolin (includes eigen)
 ```bash
@@ -33,9 +37,9 @@ pip3 install matplotlib
 sudo apt install libssl-dev 
 sudo apt-get install libboost-all-dev
 ```
-make changes to CMakeLists.txt if needed (change openCV version was the one I ran into)
-sometimes crashes on the initial build on pis, as far as I can tell during the sophus build. 
-in build.sh you may want to tweak the make -j flags 
+You may have to edit the openCV version in CMakeLists.txt 
+You may also want to edit the -j flag in build.sh depending on your hardware. 
+
 # ORB-SLAM3
 
 ### V1.0, December 22th, 2021
